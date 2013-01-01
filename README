@@ -10,60 +10,36 @@ If building from git:
 
 $ rebar compile
 
+If using as a dependency in another rebar project add this snippet to the projects
+rebar.config:
 
-Using inoteefy
---------------
+  {deps, [
+        ... other dependencies ...
+        {inotify, ".*", {git, "https://github.com/sheyll/inotify.git"}}]}
 
-inoteefy associates a callback fun with a file.
-inoteefy:watch(File,Fun) -> ok
-inoteefy:unwatch(File) -> ok
-
-If File is watched, Fun/1 will be called everytime File is
-touched. The argument to Fun will look like;
-
-{File,[Mask],Cookie,Name}
-Mask - atom() - see inotify docs (man inotify).
-Cookie - integer() - see inotify docs (man inotify). Only used for dirs.
-Name - string() - see inotify docs (man inotify). Only used for dirs.
-
-Example;
-
-(doozy@dixie)19> inoteefy:watch("/home/masse/.emacs",fun(X)->io:fwrite("~p~n",[X])end).
-ok                                                                              
-<changing the .emacs file>
-{"/home/masse/.emacs",[modify],0,[]}                                            
-{"/home/masse/.emacs",[open],0,[]}                                              
-{"/home/masse/.emacs",[modify],0,[]}
-{"/home/masse/.emacs",[modify],0,[]}
-{"/home/masse/.emacs",[close_write],0,[]}
-{"/home/masse/.emacs",[modify],0,[]}
-{"/home/masse/.emacs",[open],0,[]}
-{"/home/masse/.emacs",[modify],0,[]}
-{"/home/masse/.emacs",[close_write],0,[]}
-(doozy@dixie)20> inoteefy:unwatch("/home/masse/.emacs").
-ok
-
-
-Using inotify
+Documentation
 -------------
-This is the erlang program inotify.erl, not the underlying linux syscall.
 
-For an example on how to use inotify take a look at the function
-test/0 in inotify.erl.
+This is an OTP application. When started files and directories can be
+watched by calling 'inotify:watch(File, Tag)'. Tag is a user defined
+term that will later be used to associate notification event listeners to
+the specific events they are interested in.
+All file notifications are published via a gen_event. 
 
-The listener process gets a message of the form
-   {event, WatchDescriptor, EventList, Cookie, Name}
-where
-   WatchDescriptor is the watch descriptor which caused the event
-   EventList is one or more event which is/are the reason for the message these 
-     include,
-       access, attrib, close_write, close_nowrite, create, delete, delete_self,
-       modify, move_self, moved_from, moved_to, open
-   Cookie
-   Name is the filesystem name relative to the base which caused the event. It
-     the example test above the list [102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]
-     is the string "file" zero padded which is the file referred to by the
-     event relative to the test directory with the attached inotify watch.
+Users can either write a full blown gen_event handler and add it to 'inotify_evt'
+via gen_event:add[_sup]_handler/3 or  they can implement the
+'inotify_evt' behaviour and call 'inotify:add_handler(Tag, Module, Args)'.
+In that case Module:inotify_evt(...) will be called for each event corresponding
+to 'Tag'.
+
+For an example refer to the unit test in "test/inotify_test.erl".
+
+More documentation is contained in the source code, you might
+want to run
+
+$ rebar doc
+
+which generates HTML documentation in the "doc" sub directory.
 
 
 License
@@ -78,8 +54,6 @@ TODO
 ----
 * add support for multiple controller functions
 * Write some documentation!
-
-
 
 Release History
 ---------------

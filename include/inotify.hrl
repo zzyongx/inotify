@@ -1,13 +1,15 @@
-%% -*- mode: erlang; erlang-indent-level: 2 -*-
+%%%=============================================================================
 %%% Created : 10 May 2010 by mats cronqvist <masse@kreditor.se>
+%%% Modified : 1 Jan 2013 by sven heyll <sven.heyll@gmail.com>
+%%%=============================================================================
 
-%% @doc
-%% inotify masks
-%% @end
+-ifndef(inotify).
+-define(inotify, true).
 
 -define(inotify_msg(Mask, Cookie, Name),
         {inotify_msg, Mask, Cookie, Name}).
 
+%% inotify masks
 -define(ALL           ,all).
 -define(ACCESS        ,access).
 -define(ATTRIB        ,attrib).
@@ -26,3 +28,6 @@
 -define(DONT_FOLLOW   ,dont_follow).
 -define(MASK_ADD      ,mask_add).
 -define(ONLYDIR       ,onlydir).
+
+
+-endif. %% inotify

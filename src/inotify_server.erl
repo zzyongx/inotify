@@ -1,11 +1,10 @@
 %%%-------------------------------------------------------------------
-%%% -*- mode: erlang; erlang-indent-level: 2 -*-
 %%% Created : 28 Jan 2010 by Mats Cronqvist <masse@kreditor.se>
 %%% Converted to an OTP application by Sven Heyll <sven.heyll@gmail.com>
 %%%
 %%% @doc
-%%% "Back-end" gen_server that provides access to low level Linux inotify.
-%%% This is regarded an internal module. Use {@link inotify} instead.
+%%% A `gen_server' that provides access to low level Linux `inotify'.
+%%% This is an internal module. Use {@link inotify} instead.
 %%% @end
 %%%-------------------------------------------------------------------
 
@@ -32,18 +31,6 @@
 
 -include("inotify.hrl").
 
-%%%===================================================================
-%%% API
-%%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc
-%% Start a port process that communicates with the linux inotify API.
-%% @end
-%%--------------------------------------------------------------------
-start_link() ->
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
-
 -record(ld,{port, fd}).
 
 -define(log(T),
@@ -51,6 +38,16 @@ start_link() ->
           [process_info(self(), current_function),
            {line, ?LINE},
            T])).
+
+%%%===================================================================
+%%% API
+%%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @private
+%%--------------------------------------------------------------------
+start_link() ->
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 %%--------------------------------------------------------------------
 %% @private

@@ -2,10 +2,10 @@
 %%% @author Sven Heyll <sven@sheyllpc>
 %%% @copyright (C) 2013, Sven Heyll
 %%% @doc
-%%% Distribute inotify events added via {@link inotify:watch/2}.
-%%% This regarded an internal module. Use {@link inotify} instead.
-%%% The only thing that should be referenced is the callback, via an
-%%% attribute: `-behaviour(inotify_evt).'
+%%% Event manager for file monitoring events; Contans a behaviour for consumers of
+%%% those events.
+%%% This is an internal module, please use only the behaviour definition in this
+%%% module, and do the rest via {@link inotify}.
 %%% @end
 %%% Created :  1 Jan 2013 by Sven Heyll <sven@sheyllpc>
 %%%-------------------------------------------------------------------
@@ -34,9 +34,7 @@
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc
-%% Creates an event manager
-%% @end
+%% @private
 %%--------------------------------------------------------------------
 start_link() ->
     gen_event:start_link({local, ?SERVER}).
@@ -56,9 +54,7 @@ add_handler(EventTag, Module, Arg) ->
                           {EventTag, Module, Arg}).
 
 %%--------------------------------------------------------------------
-%% @doc
-%% Remove all handlers registered for `EventTag'.
-%% @end
+%% @private
 %%--------------------------------------------------------------------
 unwatch(EventTag) ->
     gen_event:sync_notify(?MODULE, {unwatch, EventTag}).
