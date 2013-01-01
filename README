@@ -8,7 +8,7 @@ Installation
 ------------
 If building from git:
 
-$ rebar compile
+$ ./rebar compile
 
 If using as a dependency in another rebar project add this snippet to the projects
 rebar.config:
@@ -37,7 +37,7 @@ For an example refer to the unit test in "test/inotify_test.erl".
 More documentation is contained in the source code, you might
 want to run
 
-$ rebar doc
+$ ./rebar doc
 
 which generates HTML documentation in the "doc" sub directory.
 
