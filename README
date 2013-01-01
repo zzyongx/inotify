@@ -6,52 +6,9 @@ changes to files and directory in the filesystem.
 
 Installation
 ------------
-If building from git;
- aclocal ; autoconf ; automake --add-missing ; ./configure ; make 
+If building from git:
 
-If building from the tar ball;
- ./configure ; make 
-
-This will build in-tree (i.e. the binaries/beams will be in the src
-directory).
-
-If you want to install, do;
- ./configure --prefix=/usr ; make ; sudo make install
-
-Prefix /usr will install in the OTP installation directory on a
-debian/ubuntu. Adjust to something fitting.
-
-To test, execute;
- make test. 
-
-This will run inotify:test() and you should see output similar to;
-
- $ make test
- erl -noshell -eval "inotify:test(), erlang:halt()."
- Simplistic test/example
- Start... Open the port and receive a file descriptor... F = 3
- list..L = [3]
- Watch for any changes in a Directory... W = 1
- launch listener....
- start playing with the file...
- attempt to create file "../test/file"
- listener got: {event,1,[create],0,[102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]}
- listener got: {event,1,[create],0,[102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]}
- write a message to file
- listener got: {event,1,[modify],0,[102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]}
- close the file
- listener got: {event,1,
-                     [close_write],
-                     0,
-                     [102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]}
- delete file "../test/file"
- listener got: {event,1,[delete],0,[102,105,108,101,0,0,0,0,0,0,0,0,0,0,0,0]}
- end playing with file
- stop the listener...
- stop inotify controller...
- test is now concluded
-
-The test creates a file in the test directory, writes to it and then deletes it.
+$ rebar compile
 
 
 Using inoteefy
@@ -126,6 +83,7 @@ TODO
 
 Release History
 ---------------
+20130101 version 0.4 switch to rebar 
 20100206 version 0.3 on github
 20090221 release 0.2 bug fix
 20080929 initial release version 0.1

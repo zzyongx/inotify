@@ -5,6 +5,8 @@
 %% inotify masks
 %% @end
 
+-define(inotify_msg(Mask, Cookie, Name),
+        {inotify_msg, Mask, Cookie, Name}).
 
 -define(ALL           ,all).
 -define(ACCESS        ,access).

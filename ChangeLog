@@ -1,3 +1,15 @@
+2013-01-01  Sven Heyll <sven.heyll@gmail.com>
+
+        * Move src/test.erl to priv/test.erl
+
+        * Remove auto tools support
+
+        * Add rebar configuration
+
+        * Add OTP Application
+
+        * Add OTP gen_event     
+
 2010-02-01  Mats Cronqvist  <masse@kreditor.se>
 
 	* c_src/inotify_erlang.c (note_remove):

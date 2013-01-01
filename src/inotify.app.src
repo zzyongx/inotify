@@ -1,0 +1,6 @@
+{application, inotify, [{description, "Linux file alternation monitor."},
+                        {vsn, "1"},
+			{registered, [inotify_server, inotify_evt]},
+                        {applications, [kernel,
+                                        stdlib]},
+                        {mod, {inotify, []}}]}.
