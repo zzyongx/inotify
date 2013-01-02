@@ -1,6 +1,3 @@
-
-Introduction
-------------
 Inotify is on erlang port for the Linux inotify API allowing one to monitor
 changes to files and directory in the filesystem.
 
@@ -36,7 +33,7 @@ TODO
 
 Release History
 ---------------
-20130101 version 0.4.0 switch to rebar 
+20130101 version 0.4.0 switch to rebar
 20100206 version 0.3 on github
 20090221 release 0.2 bug fix
 20080929 initial release version 0.1
