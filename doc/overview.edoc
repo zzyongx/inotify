@@ -2,27 +2,17 @@
 @title inotify - Erlang OTP application for Linux file monitoring
 @doc
 
-The only module a User should ever have to interact with is
-{@link inotify}.
-
 == Introduction ==
 
 Inotify allows to monitor changes to files and directory in the
-filesystem.  It uses Linux 'inotify' functions, hence the name.
+filesystem.  It uses Linux `inotify' functions, hence the name.
 
 This is an OTP application. When started files and directories can be
-watched by calling 'inotify:watch(File, Tag)'. Tag is a user defined
-term that will later be used to associate notification event listeners
-to the specific events they are interested in.  All file notifications
-are published via a gen_event.
+watched by calling {@link inotify:watch/1}.
 
-Users can either write a full blown gen_event handler and add it to
-'inotify_evt' via gen_event:add[_sup]_handler/3 or they can implement
-the 'inotify_evt' behaviour and call 'inotify:add_handler(Tag, Module,
-Args)'.  In that case Module:inotify_evt(...) will be called for each
-event corresponding to 'Tag'.
+All file notifications are published via a gen_event.
 
-== Installation/Usage ==
+== Installation ==
 
 If using as a dependency in another rebar project add this snippet to the projects
 rebar.config:
@@ -38,6 +28,8 @@ this application must have a corresponding entry in their '*.app' files.
 
 This is an OTP application which must be started before it can be used
 by other applications.
+
+== Playing around ==
 
 If building from git:
 ```
@@ -60,3 +52,21 @@ To stop watching:
 ```
  inotify:unwatch(Ref)
 '''
+
+== Real usage ==
+
+The API is exposed by a single module: {@link inotify}.
+
+To be able to associate events each call to {@link inotify:watch/1}
+returns a unique reference that is also contained in each event.
+
+NOTE: Currently each file or directory can only be monitored once. Each
+call to {@link inotify:watch/1} with the same path will overwrite the
+previous.
+
+Users can either write a full blown gen_event handler and add it to
+`inotify_evt' via {@link gen_event:add_handler/3} or they can implement
+the `inotify' behaviour and call {@link inotify:add_handler/3}.
+
+In that case `Module:inotify_evt(...)' will be called for each
+event corresponding to 'Tag'.

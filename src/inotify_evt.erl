@@ -2,10 +2,8 @@
 %%% @author Sven Heyll <sven@sheyllpc>
 %%% @copyright (C) 2013, Sven Heyll
 %%% @doc
-%%% Event manager for file monitoring events; Contans a behaviour for consumers of
-%%% those events.
-%%% This is an internal module, please use only the behaviour definition in this
-%%% module, and do the rest via {@link inotify}.
+%%% Event manager for file monitoring events.
+%%% This is an internal module.
 %%% @end
 %%% Created :  1 Jan 2013 by Sven Heyll <sven@sheyllpc>
 %%%-------------------------------------------------------------------
@@ -19,11 +17,6 @@
 %% gen_event callbacks
 -export([init/1, handle_event/2, handle_call/2,
          handle_info/2, terminate/2, code_change/3]).
-
--callback inotify_event(Arg :: term(),
-                        EventTag :: term(),
-                        Msg :: inotify:msg()) ->
-    ok | remove_handler.
 
 -define(SERVER, ?MODULE).
 
