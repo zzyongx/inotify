@@ -14,3 +14,5 @@ inotify
 compile
 configure
 
+doc/edoc-info
+ebin/*.app
