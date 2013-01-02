@@ -1,0 +1,19 @@
+
+Introduction
+------------
+Inotify is on erlang port for the Linux inotify API allowing one to monitor
+changes to files and directory in the filesystem.
+
+Installation
+------------
+If building from git:
+
+$ ./rebar compile
+
+If using as a dependency in another rebar project add this snippet to the projects
+rebar.config:
+
+  {deps, [
+        ... other dependencies ...
+        {inotify, ".*", {git, "https://github.com/sheyll/inotify.git"}}]}
+
