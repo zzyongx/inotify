@@ -24,7 +24,7 @@ edoc:
 compile:
 	$(REBAR) compile
 
-eunit: compile clean
+eunit: clean compile
 	$(REBAR) skip_deps=true eunit
 
 clean:
