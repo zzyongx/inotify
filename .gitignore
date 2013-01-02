@@ -16,3 +16,4 @@ configure
 
 doc/edoc-info
 ebin/*.app
+.eunit
