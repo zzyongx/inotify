@@ -10,7 +10,7 @@ dep:
 	$(REBAR) update-deps
 	
 
-edoc:
+edoc: dep clean compile
 	$(REBAR) doc skip_deps=true
 	git checkout gh-pages	
 	mv doc/*.html .

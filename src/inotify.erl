@@ -11,6 +11,29 @@
 %%% To {@link unwatch/1} something the User must pass the return value of {@link
 %%% watch/2} which is a unique reference to the monitor create by {@link
 %%% watch/2}.
+%%%
+%%% This module also defines a behaviour, with a single function
+%%% `inotify_event(Arg, EventRef, Msg)'
+%%%
+%%% A callback for file monitoring event handler added by {@link add_handler/3}.
+%%%
+%%% `Arg' is the user provided extra argument.
+%%%
+%%% `EventRef' is the value returned by {@link watch/2}.
+%%%
+%%% The `Msg' parameter of the callback function should be pattern-matched
+%%% with the macro `?inotify_msg(Mask, Cookie, OptionalName)' contained
+%%% in `include/inotify.hrl'.
+%%%
+%%% `Mask' is a list of atoms describing the nature of the event. Refer to the
+%%% Linux inotify man page for a detailed description.
+%%%
+%%% `Cookie' is 0 except when a file is moved, where it is used to identify
+%%% `move_from' and `move_to' events belonging to the same move-operation.
+%%%
+%%% `OptionalName' contains the relative file name when monitoring whole
+%%% directories. E.g. when monitoring "/tmp" the following event might be
+%%% created when opening "/tmp/xxx": `?inotify_msg([open], 0, "xxx")'.
 %%% @end
 %%%-------------------------------------------------------------------
 
@@ -68,27 +91,7 @@
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc
-%% Callback for file monitoring event handler added by {@link add_handler/3}.
-%%
-%% `Arg' is the user provided extra argument.
-%%
-%% `EventRef' is the value returned by {@link watch/2}.
-%%
-%% The `Msg' parameter of the callback function should be pattern-matched
-%% with the macro `?inotify_msg(Mask, Cookie, OptionalName)' contained
-%% in `include/inotify.hrl'.
-%%
-%% `Mask' is a list of atoms describing the nature of the event. Refer to the
-%% Linux inotify man page for a detailed description.
-%%
-%% `Cookie' is 0 except when a file is moved, where it is used to identify
-%% `move_from' and `move_to' events belonging to the same move-operation.
-%%
-%% `OptionalName' contains the relative file name when monitoring whole
-%% directories. E.g. when monitoring "/tmp" the following event might be
-%% created when opening "/tmp/xxx": `?inotify_msg([open], 0, "xxx")'.
-%% @end
+%% FUCK YOU EDOC!
 %%--------------------------------------------------------------------
 -callback inotify_event(Arg :: term(),
                         EventRef :: term(),
