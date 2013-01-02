@@ -43,7 +43,7 @@ If building from git:
 
 You can play around with it by doing this:
 
- $ export ERL_LIBS=`pwd` ; erl
+ $ export ERL_LIBS=$(pwd) ; erl
 
  application:start(inotify).
  Ref = inotify:watch("/tmp").
