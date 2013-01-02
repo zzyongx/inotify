@@ -65,7 +65,6 @@ watch(File, EventTag, Mask) ->
 %% @private
 %%--------------------------------------------------------------------
 unwatch(EventTag) ->
-    inotify_evt:unwatch(EventTag),
     gen_server:cast(?SERVER, {unwatch, EventTag}).
 
 %%%===================================================================

@@ -4,38 +4,17 @@ Introduction
 Inotify is on erlang port for the Linux inotify API allowing one to monitor
 changes to files and directory in the filesystem.
 
-Installation
-------------
-If building from git:
-
-$ ./rebar compile
-
-If using as a dependency in another rebar project add this snippet to the projects
-rebar.config:
-
-  {deps, [
-        ... other dependencies ...
-        {inotify, ".*", {git, "https://github.com/sheyll/inotify.git"}}]}
-
 Documentation
 -------------
 
-This is an OTP application. When started files and directories can be
-watched by calling 'inotify:watch(File, Tag)'. Tag is a user defined
-term that will later be used to associate notification event listeners to
-the specific events they are interested in.
-All file notifications are published via a gen_event. 
+Most documentation is here:
+http://sheyll.github.com/inotify/
 
-Users can either write a full blown gen_event handler and add it to 'inotify_evt'
-via gen_event:add[_sup]_handler/3 or  they can implement the
-'inotify_evt' behaviour and call 'inotify:add_handler(Tag, Module, Args)'.
-In that case Module:inotify_evt(...) will be called for each event corresponding
-to 'Tag'.
+For an example refer to the unit test:
+https://github.com/sheyll/inotify/blob/master/test/inotify_test.erl
 
-For an example refer to the unit test in "test/inotify_test.erl".
 
-More documentation is contained in the source code, you might
-want to run
+You might want to have the documentation locally, this can be achieved by
 
 $ ./rebar doc
 
@@ -57,7 +36,7 @@ TODO
 
 Release History
 ---------------
-20130101 version 0.4 switch to rebar 
+20130101 version 0.4.0 switch to rebar 
 20100206 version 0.3 on github
 20090221 release 0.2 bug fix
 20080929 initial release version 0.1

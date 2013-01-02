@@ -14,7 +14,7 @@
 -behaviour(gen_event).
 
 %% API
--export([start_link/0, publish/2, add_handler/3, unwatch/1]).
+-export([start_link/0, publish/2, add_handler/3, remove_all_handlers/1]).
 
 %% gen_event callbacks
 -export([init/1, handle_event/2, handle_call/2,
@@ -56,8 +56,8 @@ add_handler(EventTag, Module, Arg) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-unwatch(EventTag) ->
-    gen_event:sync_notify(?MODULE, {unwatch, EventTag}).
+remove_all_handlers(EventTag) ->
+    gen_event:sync_notify(?MODULE, {remove_all_handlers, EventTag}).
 
 %%%===================================================================
 %%% gen_event callbacks
@@ -72,7 +72,8 @@ init({EventTag, Module, Arg}) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-handle_event({unwatch, EventTag}, {EventTag, _Module, _Arg}) ->
+handle_event({remove_all_handlers, EventTag},
+             {EventTag, _Module, _Arg}) ->
     remove_handler;
 
 handle_event({?MODULE, EventTag, Msg = ?inotify_msg(_, _, _)},

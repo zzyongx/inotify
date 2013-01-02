@@ -19,8 +19,8 @@ monitor_file_test() ->
     file:delete("/tmp/inotify_test"),
 
     inotify:start(x,y),
-    ok = inotify:watch("/tmp/", tag1, ?ALL),
-    ok = inotify:add_handler(tag1, ?MODULE, self()),
+    Ref1 = inotify:watch("/tmp/", ?ALL),
+    ok = inotify:add_handler(Ref1, ?MODULE, self()),
     receive after 100 -> ok end,
 
     {ok, H} = file:open("/tmp/inotify_test", [read, write]),
@@ -35,9 +35,9 @@ monitor_file_test() ->
         M2 -> throw({expected_message_file_open_but_got, M2})
     after 1000 -> throw(expected_open)
     end,
-    inotify:watch("/tmp/inotify_test", tag2),
-    inotify:unwatch(tag1),
-    ok = inotify:add_handler(tag2, ?MODULE, self()),
+    Ref2 = inotify:watch("/tmp/inotify_test"),
+    inotify:unwatch(Ref1),
+    ok = inotify:add_handler(Ref2, ?MODULE, self()),
     receive after 100 -> ok end,
     io:write(H, "test"),
     receive
@@ -51,8 +51,8 @@ monitor_file_test() ->
         M4 -> throw({expected_message_file_close_write_but_got, M4})
     after 1000 -> throw(expected_close_write)
     end,
-    ok = inotify:watch("/tmp/", tag3, ?ALL),
-    ok = inotify:add_handler(tag3, ?MODULE, self()),
+    Ref3 = inotify:watch("/tmp/", ?ALL),
+    ok = inotify:add_handler(Ref3, ?MODULE, self()),
     receive after 100 -> ok end,
     ok = file:delete("/tmp/inotify_test"),
     receive
@@ -84,7 +84,7 @@ monitor_file_test() ->
             end
     end.
 
-inotify_event(TestPid, Tag, Msg = ?inotify_msg(M, C, N)) ->
-    io:format("$$$ ~p: ~p~n", [Tag, Msg]),
+inotify_event(TestPid, Ref, Msg = ?inotify_msg(M, C, N)) ->
+    io:format("$$$ ~p: ~p~n", [Ref, Msg]),
     TestPid ! {M, C, N},
     ok.
