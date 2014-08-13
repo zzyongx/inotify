@@ -7,7 +7,7 @@
 #include "inotify_erlang.h"
 #include "erl_comm.h"
 
-#define BUFFER_SIZE 100
+#define BUFFER_SIZE 1024
 
 int setup_select(note_t *nlist, fd_set *readfds) {
   int topfd, maxfd = 0;
@@ -71,7 +71,6 @@ int process_command(const char *command, char *buf, int *index, note_t *nlist) {
 int main() {
   /* variables for erlang interface */
   int   index, version, arity;
-  int   size = BUFFER_SIZE;
   int   cmdpos, result;
   char  inbuf[BUFFER_SIZE];
   char  command[MAXATOMLEN];
@@ -89,21 +88,20 @@ int main() {
   }
 
   cmdpos = 0;
+  memset(inbuf, 0, BUFFER_SIZE);
   maxfd = setup_select(nlist, &readfds);
   
   while ((retval = select(maxfd + 1, &readfds, NULL, NULL, NULL)) >= 0) {
     if FD_ISSET(0, &readfds) {
-      memset(inbuf, 0, BUFFER_SIZE);
-      index = 0;
-      result = read_cmd(inbuf, &size, &cmdpos);
-
+      result = read_cmd(inbuf, BUFFER_SIZE, &cmdpos);
+      
       if (result == 0) {
-	exit(1);
+	exit(0);
       } else if (result < 0) {
-	/* exit(1); */
+	exit(1);
       } else if (result == 1) {
       } else {
-
+        index = 0;
 	/* must add two(2) to inbuf pointer to skip message length header */
 	if (ei_decode_version(inbuf+2, &index, &version) ||
 	    ei_decode_tuple_header(inbuf+2, &index, &arity) ||
@@ -115,6 +113,7 @@ int main() {
 
 	/* reset position of inbuf */
 	cmdpos = 0;
+        memset(inbuf, 0, BUFFER_SIZE);
       }
     }
     /* check other file descriptors */

@@ -16,7 +16,7 @@
  *            1 when there is more to read
  *            2 when the message is complete
  */
-int read_cmd(char *buf, int *size, int *curpos)
+int read_cmd(char *buf, int size, int *curpos)
 {
   int len;
   int count;
@@ -40,12 +40,9 @@ int read_cmd(char *buf, int *size, int *curpos)
   len = (buf[0] << 8) | buf[1];
   desired = len - *curpos + 2;
 
-  /* check buffer size and realloc if necessary */
-  if (len > *size) {
-    buf = (char *) realloc(buf, len);
-    if (buf == NULL)
-      return -1;
-    *size = len;
+  /* check buffer size */
+  if (len > size) {
+    return -1;
   }
 
   /* read message body */

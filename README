@@ -25,15 +25,3 @@ of you plan for world domination (if your successful can I have one of the nicer
 countries please). No responsiblity it taken for the fitness of the any purpose,
 etc, etc. The only thing I ask is that if you find a bug and fix send me the
 patch. Likewise, feature suggestions and patches are welcome.
-
-TODO
-----
-* add support for multiple controller functions
-* Write some documentation!
-
-Release History
----------------
-20130101 version 0.4.0 switch to rebar
-20100206 version 0.3 on github
-20090221 release 0.2 bug fix
-20080929 initial release version 0.1

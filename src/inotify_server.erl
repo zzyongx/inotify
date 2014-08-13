@@ -24,8 +24,11 @@
 %% gen_server exports
 -export([init/1,
          terminate/2,
+         handle_call/3,
          handle_cast/2,
-         handle_info/2]).
+         handle_info/2,
+         code_change/3
+        ]).
 
 -define(SERVER, ?MODULE).
 
@@ -112,6 +115,13 @@ handle_cast({unwatch, Unwatch}, LD) ->
 handle_cast(Msg, LD) ->
   ?log({unknown_message, Msg}),
   {noreply, LD}.
+
+handle_call(Request, _From, State) ->
+    {reply, Request, State}.
+
+code_change(_Vsn, State, _Extra) ->
+    {ok, State}.
+     
 
 %%%===================================================================
 %%% Internal functions
