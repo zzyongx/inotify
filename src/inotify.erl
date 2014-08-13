@@ -174,9 +174,9 @@ print_events(Ref) ->
 %% @end
 %%--------------------------------------------------------------------
 
-start_link(Fun) ->
+start_link({Module, Fun, Arg}) ->
     Ret = supervisor:start_link(?MODULE, []),
-    ok = Fun(),
+    ok = apply(Module, Fun, Arg),
     Ret.
 
 %%%===================================================================
