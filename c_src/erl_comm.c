@@ -37,7 +37,7 @@ int read_cmd(char *buf, int size, int *curpos)
    * the desired amount to read taking into account
    * the ammount already read
    */
-  len = (buf[0] << 8) | buf[1];
+  len = ((unsigned char)buf[0] << 8) | (unsigned char)buf[1];
   desired = len - *curpos + 2;
 
   /* check buffer size */
