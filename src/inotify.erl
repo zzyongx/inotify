@@ -194,9 +194,9 @@ init(Opts) ->
     EventOpts  = proplists:get_value(event, Opts, []),
     ServerOpts = proplists:get_value(server, Opts, []),
     {ok, {{one_for_all, 1, 1},
-          [{?EVENT,  {?EVENT, start_link, EventOpts},
+          [{?EVENT,  {?EVENT, start_link, [EventOpts]},
             permanent, 2000, worker, [?EVENT]},
-           {?SERVER, {?SERVER, start_link, ServerOpts},
+           {?SERVER, {?SERVER, start_link, [ServerOpts]},
             permanent, 2000, worker, [?SERVER]}]}}.
 
 %%%===================================================================
