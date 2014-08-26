@@ -16,10 +16,8 @@
 -author('Sven Heyll').
 
 %% API
--export([start_link/0,
-         watch/2,
-         watch/3,
-         unwatch/1]).
+-export([start_link/0, start_link/1,
+         watch/2, watch/3, unwatch/1]).
 
 %% gen_server exports
 -export([init/1,
@@ -49,8 +47,15 @@
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-start_link() ->
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+start_link() -> start_link([]).
+
+start_link(Watches) ->
+    {ok, Pid} = gen_server:start_link({local, ?MODULE}, ?MODULE, [], []),
+    lists:foreach(
+      fun({File, Et}) -> watch(File, Et);
+         ({File, Et, Mask}) -> watch(File, Et, Mask)
+      end, Watches),
+    {ok, Pid}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -154,18 +159,12 @@ maybe_call_back({event, WD, Mask, Cookie, Name}) ->
 %% @private
 %%--------------------------------------------------------------------
 do_watch({File, Tag, Mask}, LD) ->
-    try
-        %% ?debugFmt("do_watch ~p ~p ~p~n", [LD#ld.fd, File, Mask]),
-        {ok, WD} = talk_to_port(LD#ld.port, {add, LD#ld.fd, File, Mask}),
-        put({tag, Tag}, WD),
-        put({wd, WD}, Tag),
-        LD
-    catch
-        C:R ->
-            ?log([{error_watching_file, File, Tag}, {C, R}]),
-            LD
-    end.
-
+    %% ?debugFmt("do_watch ~p ~p ~p~n", [LD#ld.fd, File, Mask]),
+    {ok, WD} = talk_to_port(LD#ld.port, {add, LD#ld.fd, File, Mask}),
+    put({tag, Tag}, WD),
+    put({wd, WD}, Tag),
+    LD.
+    
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
@@ -175,13 +174,8 @@ do_unwatch(Tag, LD) ->
             ?log([{not_watching, Tag}]),
             LD;
         WD ->
-            try
-                %% ?debugFmt("do_unwatch ~p ~p~n", [LD#ld.fd, WD]),
-                talk_to_port(LD#ld.port, {remove, LD#ld.fd, WD})
-            catch
-                C:R ->
-                    ?log([{error_unwatching, Tag},{C, R}])
-            end,
+            %% ?debugFmt("do_unwatch ~p ~p~n", [LD#ld.fd, WD]),
+            talk_to_port(LD#ld.port, {remove, LD#ld.fd, WD}),
             erase({tag, Tag}),
             erase({wd, WD}),
             LD
