@@ -45,7 +45,7 @@ int note_send_errno() {
     ei_x_encode_atom(&errmsg, "enotty");
     break;
   default:
-    ei_x_encode_atom(&errmsg, "unknown_errno");
+    ei_x_encode_atom(&errmsg, strerror(errno));
     break;
   }	  
   write_cmd(&errmsg);
@@ -366,6 +366,7 @@ int note_open(note_t *note, char *buf, int *count) {
     return(0);
   }
 
+  /* fprintf(stderr, "inotify_init\n"); */
   if ((fd = inotify_init()) < 0) {
     free(newent);
     if (ei_x_encode_atom(&result, "error") ||
@@ -456,6 +457,7 @@ int note_add(note_t *note, char *buf, int *index) {
     return(0);
   }
 
+  /* fprintf(stderr, "inotify_add_watch(%lu, %s, %lu)\n", fd, pathname, mask); */
   if ((wd = inotify_add_watch(fd, pathname, mask)) < 0) {
     return note_send_errno();
   }
@@ -483,6 +485,7 @@ int note_remove(note_t *note, char *buf, int *index) {
       ei_decode_ulong(buf, index, &wd)) return(-1);
 
 
+  /* fprintf(stderr, "inotify_rm_watch(%lu, %lu)\n", fd, wd); */
   if (inotify_rm_watch(fd, wd) < 0) {
   /* Output buffer that will hold {error, Reason} or {ok, Wd}*/
     return note_send_errno();

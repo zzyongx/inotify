@@ -42,7 +42,8 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/1, watch/1, watch/2, unwatch/1, add_handler/3, print_events/1]).
+-export([start_link/0, start_link/1,
+         watch/1, watch/2, unwatch/1, add_handler/3, print_events/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -173,6 +174,9 @@ print_events(Ref) ->
 %% use inotify as a lib without process
 %% @end
 %%--------------------------------------------------------------------
+
+start_link() ->
+    supervisor:start_link(?MODULE, []).
 
 start_link({Module, Fun, Arg}) ->
     Ret = supervisor:start_link(?MODULE, []),

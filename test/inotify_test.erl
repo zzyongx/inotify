@@ -18,7 +18,7 @@ monitor_file_test() ->
     process_flag(trap_exit, true),
     file:delete("/tmp/inotify_test"),
 
-    inotify:start(x,y),
+    inotify:start_link(),
     Ref1 = inotify:watch("/tmp/", ?ALL),
     ok = inotify:add_handler(Ref1, ?MODULE, self()),
     receive after 100 -> ok end,
@@ -82,7 +82,10 @@ monitor_file_test() ->
             receive X4 -> throw({expected, X4})
             after 1000 -> throw(expected_delete)
             end
-    end.
+    end,
+    
+    exit(whereis(inotify_evt), normal),
+    exit(whereis(inotify_server), normal).
 
 inotify_event(TestPid, Ref, Msg = ?inotify_msg(M, C, N)) ->
     io:format("$$$ ~p: ~p~n", [Ref, Msg]),

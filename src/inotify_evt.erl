@@ -19,7 +19,6 @@
          handle_info/2, terminate/2, code_change/3]).
 
 -define(SERVER, ?MODULE).
-
 -include("inotify.hrl").
 
 %%%===================================================================

@@ -92,7 +92,7 @@ terminate(_, LD) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-handle_info({Port, {data,Msg}}, LD = #ld{port = Port}) ->
+handle_info({Port, {data, Msg}}, LD = #ld{port = Port}) ->
   maybe_call_back(binary_to_term(Msg)),
   {noreply, LD};
 
@@ -153,8 +153,9 @@ maybe_call_back({event, WD, Mask, Cookie, Name}) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-do_watch({File, Tag, Mask},LD) ->
+do_watch({File, Tag, Mask}, LD) ->
     try
+        %% ?debugFmt("do_watch ~p ~p ~p~n", [LD#ld.fd, File, Mask]),
         {ok, WD} = talk_to_port(LD#ld.port, {add, LD#ld.fd, File, Mask}),
         put({tag, Tag}, WD),
         put({wd, WD}, Tag),
@@ -175,6 +176,7 @@ do_unwatch(Tag, LD) ->
             LD;
         WD ->
             try
+                %% ?debugFmt("do_unwatch ~p ~p~n", [LD#ld.fd, WD]),
                 talk_to_port(LD#ld.port, {remove, LD#ld.fd, WD})
             catch
                 C:R ->
@@ -188,7 +190,7 @@ do_unwatch(Tag, LD) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-talk_to_port(Port,Msg) ->
+talk_to_port(Port, Msg) ->
     try
         erlang:port_command(Port, term_to_binary(Msg)),
         receive
