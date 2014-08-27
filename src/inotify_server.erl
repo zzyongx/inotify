@@ -47,14 +47,12 @@
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-start_link() -> start_link([]).
+start_link() -> 
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
-start_link(Watches) ->
+start_link(InitFun) ->
     {ok, Pid} = gen_server:start_link({local, ?MODULE}, ?MODULE, [], []),
-    lists:foreach(
-      fun({File, Et}) -> watch(File, Et);
-         ({File, Et, Mask}) -> watch(File, Et, Mask)
-      end, Watches),
+    ok = InitFun(),
     {ok, Pid}.
 
 %%--------------------------------------------------------------------
@@ -98,8 +96,11 @@ terminate(_, LD) ->
 %% @private
 %%--------------------------------------------------------------------
 handle_info({Port, {data, Msg}}, LD = #ld{port = Port}) ->
-  maybe_call_back(binary_to_term(Msg)),
-  {noreply, LD};
+    maybe_call_back(binary_to_term(Msg)),
+    {noreply, LD};
+
+handle_info({Port,{exit_status, _Status}}, #ld{port = Port} = LD) ->
+    {stop, "port inotify exit", LD};
 
 handle_info(Msg, LD) ->
   ?log({unknown_message, Msg}),

@@ -42,7 +42,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, start_link/2,
+-export([start_link/0, start_link/1,
          watch/1, watch/2, unwatch/1, add_handler/3, print_events/1]).
 
 %% Supervisor callbacks
@@ -176,12 +176,10 @@ print_events(Ref) ->
 %%--------------------------------------------------------------------
 
 start_link() ->
-    supervisor:start_link(?MODULE, []).
+    supervisor:start_link(?MODULE, fun() -> ok end).
 
-start_link(ServerOpts, EventOpts) ->
-    Ret = supervisor:start_link(?MODULE,
-                                [{server, ServerOpts}, {event, EventOpts}]),
-    Ret.
+start_link(InitFun) ->
+    supervisor:start_link(?MODULE, InitFun).
 
 %%%===================================================================
 %%% supervisor callbacks
@@ -190,13 +188,11 @@ start_link(ServerOpts, EventOpts) ->
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-init(Opts) ->
-    EventOpts  = proplists:get_value(event, Opts, []),
-    ServerOpts = proplists:get_value(server, Opts, []),
+init(InitFun) ->
     {ok, {{one_for_all, 1, 1},
-          [{?EVENT,  {?EVENT, start_link, [EventOpts]},
+          [{?EVENT,  {?EVENT, start_link, []},
             permanent, 2000, worker, [?EVENT]},
-           {?SERVER, {?SERVER, start_link, [ServerOpts]},
+           {?SERVER, {?SERVER, start_link, [InitFun]},
             permanent, 2000, worker, [?SERVER]}]}}.
 
 %%%===================================================================

@@ -12,7 +12,7 @@
 -behaviour(gen_event).
 
 %% API
--export([start_link/0, start_link/1, publish/2,
+-export([start_link/0, publish/2,
          add_handler/3, remove_all_handlers/1]).
 
 %% gen_event callbacks
@@ -29,13 +29,8 @@
 %%--------------------------------------------------------------------
 %% @private
 %%--------------------------------------------------------------------
-start_link() -> start_link([]).
-start_link(Events) ->
-    {ok, Pid} = gen_event:start_link({local, ?SERVER}),
-    lists:foreach(
-      fun({Et, Module, Arg}) -> add_handler(Et, Module, Arg)
-      end, Events),
-    {ok, Pid}.
+start_link() ->
+    gen_event:start_link({local, ?SERVER}).
 
 %%--------------------------------------------------------------------
 %% @private
